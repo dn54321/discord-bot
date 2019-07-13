@@ -4,3 +4,4 @@ Scripts
 pyvenv.cfg
 .vscode
 bot-env
+__pycache__
