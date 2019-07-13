@@ -35,6 +35,8 @@ async def on_message(message):
                 await message.author.send("Make me something delicious and I'll consider making you my apprentice chef! Hmmpf.")
             role = discord.utils.get(message.guild.roles, name="Member")
             await message.author.add_roles(role)
+            role = discord.utils.get(message.guild.roles, name="Guest")
+            await message.author.remove_roles(role)
             embed=discord.Embed(title="Description", description="This card identifies that this particular person has started their career as a chef and has been acknowledged by chef Hunzer as a disciple.")
             embed.set_author(name="[common] Membership Card", icon_url="http://getdrawings.com/vectors/zen-circle-vector-7.jpg")
             embed.set_thumbnail(url=message.author.avatar_url)
