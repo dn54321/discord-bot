@@ -3,9 +3,8 @@ import asyncio
 from discord.ext import commands
 import logging
 from properties import *
-from TagListener import *
-from TagHandler import *
-import Tag_League
+from Tag_Listener import *
+from Tag_Handler import *
 logging.basicConfig(level=logging.INFO)
 client = commands.Bot(command_prefix="!")
 
@@ -17,9 +16,14 @@ async def on_ready():
         print("guild name: \"" + guild.name + "\", id: \""+ str(guild.id) +"\"\n")
 
     # adding tag event listener
-    tagListener = TagListener()
-    league = Tag_League
-    tagListener.add_event(league, "onTag")
+    tagListener = TagListener(client)
+    client.add_cog(tagListener)
+
+    # LEAGUE OF LEGENDS TAG
+    leagueHandler = Tag_Handler(Add_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    tagListener.add_event(leagueHandler, "onTag")
+    leagueHandler = Tag_Handler(Remove_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    tagListener.add_event(leagueHandler, "offTag")
      #Usings tags for the message to obtain roles
   #  mess = await client.get_channel(TEXT_CHANNEL).fetch_message(TEXT)
   #  await mess.add_reaction('🔄');
@@ -49,19 +53,7 @@ async def on_message(message):
             embed.add_field(name="Assigned By", value="Chef Hunzer", inline=True)
             embed.set_footer(text="Remark: Can only be obtained through Chef Hunzer's recognition of a potential chef!")
             await message.author.send(embed=embed)
-             
-@client.event
-async def on_raw_reaction_remove(payload):
-    if payload.message_id == TEXT and payload.emoji.name == '♌':
-        member = client.get_guild(GUILD).get_member(payload.user_id)
-        for role in member.roles:
-            role = discord.utils.get(client.get_guild(GUILD).roles, name="[League Of Legends]")
-            try:
-                await member.remove_roles(role)
-            except:
-                print("Member rank too high!")
-            finally:
-                break
+
     if payload.message_id == TEXT and payload.emoji.name == '🔄':
         member = client.get_guild(GUILD).get_member(payload.user_id)
         isMember = False;
