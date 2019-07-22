@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 # An event listener which fires when a message is tagged with an emote.
-class TagListener(commands.Cog):
+class Tag_Listener(commands.Cog):
     # Accepts many event handlers of object tagHandler.
     # @client - the client of the discord-bot.
     # @onTag - A list of tagHandler obj which fire when a user reacts to a message.

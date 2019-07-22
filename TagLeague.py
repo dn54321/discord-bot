@@ -1,7 +1,7 @@
-from Tag_Handler import *
+from TagHandler import *
 from properties import *
 import discord
-class Tag_League(Tag_Handler):
+class TagLeague(Tag_Handler):
     async def run(client, payload):
         if payload.message_id == TEXT and payload.emoji.name == '♌':
             member = client.get_guild(GUILD).get_member(payload.user_id)

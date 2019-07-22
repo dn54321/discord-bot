@@ -5,6 +5,7 @@ import logging
 from properties import *
 from Tag_Listener import *
 from Tag_Handler import *
+from Swear_Filter import *
 logging.basicConfig(level=logging.INFO)
 client = commands.Bot(command_prefix="!")
 
@@ -16,14 +17,15 @@ async def on_ready():
         print("guild name: \"" + guild.name + "\", id: \""+ str(guild.id) +"\"\n")
 
     # adding tag event listener
-    tagListener = TagListener(client)
-    client.add_cog(tagListener)
+    listener = Tag_Listener(client)
+    client.add_cog(listener)
+    client.add_cog(Swear_Filter(client))
 
     # LEAGUE OF LEGENDS TAG
-    leagueHandler = Tag_Handler(Add_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
-    tagListener.add_event(leagueHandler, "onTag")
-    leagueHandler = Tag_Handler(Remove_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
-    tagListener.add_event(leagueHandler, "offTag")
+    league_Handler = Tag_Handler(Add_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    listener.add_event(league_Handler, "onTag")
+    league_Handler = Tag_Handler(Remove_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    listener.add_event(league_Handler, "offTag")
      #Usings tags for the message to obtain roles
   #  mess = await client.get_channel(TEXT_CHANNEL).fetch_message(TEXT)
   #  await mess.add_reaction('🔄');
