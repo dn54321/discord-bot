@@ -3,6 +3,9 @@ import asyncio
 from discord.ext import commands
 import logging
 from properties import *
+from Tag_Listener import *
+from Tag_Handler import *
+from Swear_Filter import *
 logging.basicConfig(level=logging.INFO)
 client = commands.Bot(command_prefix="!")
 
@@ -13,6 +16,16 @@ async def on_ready():
     for guild in client.guilds:
         print("guild name: \"" + guild.name + "\", id: \""+ str(guild.id) +"\"\n")
 
+    # adding tag event listener
+    listener = Tag_Listener(client)
+    client.add_cog(listener)
+    client.add_cog(Swear_Filter(client))
+
+    # LEAGUE OF LEGENDS TAG
+    league_Handler = Tag_Handler(Add_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    listener.add_event(league_Handler, "onTag")
+    league_Handler = Tag_Handler(Remove_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    listener.add_event(league_Handler, "offTag")
      #Usings tags for the message to obtain roles
   #  mess = await client.get_channel(TEXT_CHANNEL).fetch_message(TEXT)
   #  await mess.add_reaction('🔄');
@@ -45,32 +58,6 @@ async def on_message(message):
             embed.set_footer(text="Remark: Can only be obtained through Chef Hunzer's recognition of a potential chef!")
             await message.author.send(embed=embed)
 
-@client.event
-async def on_raw_reaction_add(payload):
-    if payload.message_id == TEXT and payload.emoji.name == '♌':
-        member = client.get_guild(GUILD).get_member(payload.user_id)
-        for role in member.roles:
-            if role.name == 'Member':
-                role = discord.utils.get(client.get_guild(GUILD).roles, name="[League Of Legends]")
-                try:
-                    await member.add_roles(role)
-                except:
-                    print("Member rank too high!")
-                finally:
-                    break
-                
-@client.event
-async def on_raw_reaction_remove(payload):
-    if payload.message_id == TEXT and payload.emoji.name == '♌':
-        member = client.get_guild(GUILD).get_member(payload.user_id)
-        for role in member.roles:
-            role = discord.utils.get(client.get_guild(GUILD).roles, name="[League Of Legends]")
-            try:
-                await member.remove_roles(role)
-            except:
-                print("Member rank too high!")
-            finally:
-                break
     if payload.message_id == TEXT and payload.emoji.name == '🔄':
         member = client.get_guild(GUILD).get_member(payload.user_id)
         isMember = False;
