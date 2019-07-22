@@ -82,6 +82,7 @@ async def on_message(message):
 #client = discord.ext.commands.Bot("!", None, "A master chef!", options={"activity": discord.Game("Cooking Food")})
 
 if BOT_ID == 'private':
+    print(os.environ.get('BOT_ID', None))
     client.run(os.environ.get('BOT_ID', None))
 else:
     client.run(BOT_ID)
