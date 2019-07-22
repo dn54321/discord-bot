@@ -1,13 +1,23 @@
 from abc import ABC, abstractmethod
 import discord
 from properties import *
+
+# used to convert type message to a payload format.
+class Payload():
+    def __init__(self, message_id=None, user_id=None, channel_id=None, guild_id=None, emoji=None):
+        self.message_id = message_id
+        self.user_id = user_id
+        self.channel_id = channel_id
+        self.guild_id = guild_id
+        self.emoji = emoji
+
+
 class Tag_Handler:
     def __init__(self, state, *argv):
         self.state = state
         self.argv = argv
     async def run(self, client, payload):
         await self.state.prep(client, payload, *self.argv)
-
 
 class Add_Role:
     def __init__(self):
@@ -23,6 +33,9 @@ class Add_Role:
     async def run(self, client, emote, msg_id, payload, *argv):
         if not self.role:
             for arg in argv:
+                #checking if the reacted message is here or not
+                if not (msg_id == None or Payload.message_id == msg_id or payload.emoji.name == emote):
+                    return
                 if arg[0] == '-': # Must not have this role
                     role = discord.utils.get(client.get_guild(GUILD).roles, name=arg[1:])
                     if role is None: 
@@ -51,6 +64,8 @@ class Remove_Role:
         self.notreqs = [] # requires that this role is not in member.
         self.role = []    # role to obtain if any.
     async def prep(self, client, payload, *argv):
+        if isinstance(payload, discord.Message):
+            payload = Payload(payload.id, payload.author.id, payload.channel.id, payload.guild.id)
         emote = argv[0]
         msg_id = argv[1]
         argv = argv[2:]
@@ -58,6 +73,9 @@ class Remove_Role:
         
     async def run(self, client, emote, msg_id, payload, *argv):
         if not self.role:
+            #checking if the reacted message is here or not
+            if not (msg_id == None or Payload.message_id == msg_id or payload.emoji.name == emote):
+                return
             for arg in argv:
                 if arg[0] == '-': # Must not have this role
                     role = discord.utils.get(client.get_guild(GUILD).roles, name=arg[1:])

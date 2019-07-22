@@ -57,7 +57,7 @@ async def on_message(message):
             embed.add_field(name="Assigned By", value="Chef Hunzer", inline=True)
             embed.set_footer(text="Remark: Can only be obtained through Chef Hunzer's recognition of a potential chef!")
             await message.author.send(embed=embed)
-
+'''
     if payload.message_id == TEXT and payload.emoji.name == '🔄':
         member = client.get_guild(GUILD).get_member(payload.user_id)
         isMember = False;
@@ -71,7 +71,7 @@ async def on_message(message):
                 await member.add_roles(role)
         except:
             print("Member rank too high!")
-
+'''
 
 #client = discord.ext.commands.Bot("!", None, "A master chef!", options={"activity": discord.Game("Cooking Food")})
 client.run('NTk5MzA4NTg1OTYwMzQxNTA2.XSjVtg.8sIeUAadBSNK6RAgz5vRzhGMyHU')
