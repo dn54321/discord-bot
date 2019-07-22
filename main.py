@@ -6,6 +6,9 @@ from properties import *
 from Tag_Listener import *
 from Tag_Handler import *
 from Swear_Filter import *
+from boto.s3.connection import S3Connection
+s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+
 logging.basicConfig(level=logging.INFO)
 client = commands.Bot(command_prefix="!")
 
@@ -22,13 +25,12 @@ async def on_ready():
     client.add_cog(Swear_Filter(client))
 
     # LEAGUE OF LEGENDS TAG
-    league_Handler = Tag_Handler(Add_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    league_Handler = Tag_Handler(Add_Role(),'♌', REACT_MSG, "+[League Of Legends]", "Member")
     listener.add_event(league_Handler, "onTag")
-    league_Handler = Tag_Handler(Remove_Role(),'♌', TEXT, "+[League Of Legends]", "Member")
+    league_Handler = Tag_Handler(Remove_Role(),'♌', REACT_MSG, "+[League Of Legends]", "Member")
     listener.add_event(league_Handler, "offTag")
-     #Usings tags for the message to obtain roles
-  #  mess = await client.get_channel(TEXT_CHANNEL).fetch_message(TEXT)
-  #  await mess.add_reaction('🔄');
+    league_Handler = Tag_Handler(Remove_Role(),'🔄', REACT_MSG, "+Guest", "-Member")
+    listener.add_event(league_Handler, "offTag")
     
 
 @client.event
@@ -58,7 +60,7 @@ async def on_message(message):
             embed.set_footer(text="Remark: Can only be obtained through Chef Hunzer's recognition of a potential chef!")
             await message.author.send(embed=embed)
 '''
-    if payload.message_id == TEXT and payload.emoji.name == '🔄':
+    if payload.message_id == REACT_MSG and payload.emoji.name == '🔄':
         member = client.get_guild(GUILD).get_member(payload.user_id)
         isMember = False;
         try:
@@ -74,4 +76,8 @@ async def on_message(message):
 '''
 
 #client = discord.ext.commands.Bot("!", None, "A master chef!", options={"activity": discord.Game("Cooking Food")})
-client.run('NTk5MzA4NTg1OTYwMzQxNTA2.XSjVtg.8sIeUAadBSNK6RAgz5vRzhGMyHU')
+
+if BOT_ID == 'private':
+    client.run(os.environ[BOT_ID])
+else:
+    client.run(BOT_ID)
