@@ -5,3 +5,4 @@ pyvenv.cfg
 .vscode
 bot-env
 __pycache__
+properties.py

@@ -7,7 +7,11 @@ from Tag_Listener import *
 from Tag_Handler import *
 from Swear_Filter import *
 from boto.s3.connection import S3Connection
-s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+import os
+try:
+    s3 = S3Connection(os.environ['S3_KEY'], os.environ['S3_SECRET'])
+except:
+    print("Detected Locally, using configs in properties.py")
 
 logging.basicConfig(level=logging.INFO)
 client = commands.Bot(command_prefix="!")
